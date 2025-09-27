@@ -1,0 +1,12 @@
+﻿  MathClient.cpp
+C:\Users\kraso\source\repos\StaticMath\VectorDLL\VectorDLL.h(31,12): warning C4251: 'Vector::_x': 'Number' needs to have dll-interface to be used by clients of 'Vector'
+  (compiling source file 'MathClient.cpp')
+      C:\Users\kraso\source\repos\StaticMath\NumberLibrary\NumberLibrary.h(7,7):
+      see declaration of 'Number'
+  
+C:\Users\kraso\source\repos\StaticMath\VectorDLL\VectorDLL.h(32,12): warning C4251: 'Vector::_y': 'Number' needs to have dll-interface to be used by clients of 'Vector'
+  (compiling source file 'MathClient.cpp')
+      C:\Users\kraso\source\repos\StaticMath\NumberLibrary\NumberLibrary.h(7,7):
+      see declaration of 'Number'
+  
+  MathClient.vcxproj -> C:\Users\kraso\source\Operating-Systems\StaticMath\x64\Debug\MathClient.exe

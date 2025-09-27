@@ -1,0 +1,42 @@
+#include "pch.h"
+#include "VectorDLL.h"
+#include "../NumberLibrary/NumberLibrary.h"
+
+#include <sstream>
+
+Vector::Vector() : _x(NUMBER_ZERO), _y(NUMBER_ZERO) {}
+Vector::Vector(const Number& x, const Number& y) : _x(x), _y(y) {}
+
+Number Vector::getX() const
+{
+    return _x;
+}
+Number Vector::getY() const
+{
+    return _y;
+}
+
+Vector Vector::operator+(const Vector& other) const
+{
+    return Vector(_x + other._x, _y + other._y);
+}
+
+Number Vector::radius() const {
+    Number xsq = _x * _x;
+    Number ysq = _y * _y;
+    Number sum = xsq + ysq;
+    return numberSqrt(sum);
+}
+
+Number Vector::angle() const {
+    return numberAtan2(_y, _x);
+}
+
+std::string Vector::toString() const {
+    std::ostringstream ss;
+    ss << "(" << _x.toString() << ", " << _y.toString() << ")";
+    return ss.str();
+}
+
+VECTORDLL_API const Vector VECTOR_ZERO = Vector(NUMBER_ZERO, NUMBER_ZERO);
+VECTORDLL_API const Vector VECTOR_ONE_ONE = Vector(Number(1), Number(1));
