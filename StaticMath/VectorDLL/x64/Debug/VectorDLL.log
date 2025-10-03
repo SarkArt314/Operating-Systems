@@ -1,6 +1,4 @@
-﻿  pch.cpp
-  dllmain.cpp
-  VectorDLL.cpp
+﻿  VectorDLL.cpp
 C:\Users\kraso\source\Operating-Systems\StaticMath\VectorDLL\VectorDLL.h(31,12): warning C4251: 'Vector::_x': 'Number' needs to have dll-interface to be used by clients of 'Vector'
   (compiling source file '/VectorDLL.cpp')
       C:\Users\kraso\source\Operating-Systems\StaticMath\NumberLibrary\NumberLibrary.h(7,7):
@@ -11,6 +9,4 @@ C:\Users\kraso\source\Operating-Systems\StaticMath\VectorDLL\VectorDLL.h(32,12):
       C:\Users\kraso\source\Operating-Systems\StaticMath\NumberLibrary\NumberLibrary.h(7,7):
       see declaration of 'Number'
   
-  Generating Code...
-     Creating library C:\Users\kraso\source\Operating-Systems\StaticMath\x64\Debug\VectorDLL.lib and object C:\Users\kraso\source\Operating-Systems\StaticMath\x64\Debug\VectorDLL.exp
   VectorDLL.vcxproj -> C:\Users\kraso\source\Operating-Systems\StaticMath\x64\Debug\VectorDLL.dll

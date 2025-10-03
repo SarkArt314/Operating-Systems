@@ -1,13 +1,21 @@
 #ifndef VECTOR_DLL
 #define VECTOR_DLL
 
-#ifdef VECTORDLL_EXPORTS
-#define VECTORDLL_API __declspec(dllexport)
+#ifdef _WIN32
+  #ifdef VECTORDLL_EXPORTS
+    #define VECTORDLL_API __declspec(dllexport)
+  #else
+    #define VECTORDLL_API __declspec(dllimport)
+  #endif
 #else
-#define VECTORDLL_API __declspec(dllimport)
+  #ifdef VECTORDLL_EXPORTS
+    #define VECTORDLL_API __attribute__((visibility("default")))
+  #else
+    #define VECTORDLL_API
+  #endif
 #endif
 
-#include "../NumberLibrary/NumberLibrary.h"
+#include "NumberLibrary.h"
 #include <string>
 
 class VECTORDLL_API Vector {

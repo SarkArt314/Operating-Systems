@@ -7,7 +7,7 @@
 #define VECTORDLL_API __declspec(dllimport)
 #endif
 
-#include "../NumberLibrary/NumberLibrary.h"
+#include "NumberLibrary.h"
 #include <string>
 
 class VECTORDLL_API Vector {
@@ -32,6 +32,7 @@ private:
     Number _y;
 };
 
+// îáúÿâëåíèÿ êîíñòàíò
 extern VECTORDLL_API const Vector VECTOR_ZERO;
 extern VECTORDLL_API const Vector VECTOR_ONE_ONE;
 
