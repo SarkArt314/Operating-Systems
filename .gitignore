@@ -1,0 +1,77 @@
+## Игнорировать файлы сборки и исполняемые файлы
+[Bb]in/
+[Oo]bj/
+*.exe
+*.dll
+*.lib
+*.exp
+*.pdb
+*.ipdb
+*.iobj
+*.ilk
+*.msi
+*.cache
+
+## Игнорировать файлы пользовательских настроек
+*.user
+*.userosscache
+*.sln.docstates
+
+## Игнорировать временные файлы
+[Tt]humbs.db
+*~
+*.tmp
+*.temp
+
+## Игнорировать результаты сборки
+[Bb]uild/
+[Rr]elease/
+[Dd]ebug/
+x64/
+x86/
+[Pp]ackages/
+.vs/
+
+## Игнорировать файлы проекта CMake
+[Cc]make/
+*.cmake
+CMakeCache.txt
+CMakeFiles/
+
+## Игнорировать системные файлы
+.DS_Store
+Desktop.ini
+
+## Игнорировать файлы данных и логов
+*.log
+*.tlog
+*.idb
+*.pch
+*.ipch
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.suo
+
+## Игнорировать результаты тестов и измерений
+results_*.txt
+*.csv
+output/
+[Tt]est[Rr]esults/
+
+## Игнорировать резервные копии
+*.bak
+*.backup
+
+## Игнорировать файлы установки
+_[Rr]elease/
+_[Dd]ebug/
+*.install
+*.installed
+
+## Игнорировать файлы профилирования
+*.vsp
+*.psess
+*.prof
+*.aps
