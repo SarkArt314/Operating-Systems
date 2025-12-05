@@ -115,5 +115,24 @@ int wmain()
     CloseHandle(piS.hProcess); CloseHandle(piS.hThread);
 
     std::cout << "Final output from chain (S): " << result;
+
+        FILE* f = nullptr;
+        freopen_s(&f, "CONIN$", "r", stdin);
+        if (f) {
+            std::cout << "Press Enter to exit...";
+            std::string dummy;
+            std::getline(std::cin, dummy);
+        }
+        else {
+            HANDLE hCon = CreateFileW(L"CONIN$", GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+            if (hCon != INVALID_HANDLE_VALUE) {
+                std::cout << "Press Enter to exit...";
+                char ch;
+                DWORD rd;
+                ReadFile(hCon, &ch, 1, &rd, nullptr);
+                CloseHandle(hCon);
+            }
+        }
+
     return 0;
 }
