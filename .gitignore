@@ -15,7 +15,8 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.vxproj
+*.vcxproj
+*.vcxproj.filters
 ## Игнорировать временные файлы
 [Tt]humbs.db
 *~
