@@ -26,13 +26,15 @@ public:
 
     std::pair<T, bool> Recv() {
         std::unique_lock<std::mutex> lock(mutex_);
-        not_empty_.wait(lock, [this]() { return closed_ || !queue_.empty(); });
+        
+        not_empty_.wait(lock, [this]() { 
+            return (closed_ && queue_.empty()) || !queue_.empty(); 
+            });
+        
         if (queue_.empty() && closed_) {
             return std::make_pair(T(), false);
         }
-        if (queue_.empty()) {
-            return std::make_pair(T(), false);
-        }
+        
         T value = std::move(queue_.front());
         queue_.pop();
         not_full_.notify_one();
