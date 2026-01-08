@@ -85,8 +85,7 @@
       <AdditionalDependencies>NumberLibrary.lib;VectorDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "C:\Users\kraso\source\Operating-Systems\StaticMath\x64\Debug\VectorDLL.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,8 +107,7 @@
       <AdditionalDependencies>NumberLibrary.lib;VectorDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "C:\Users\kraso\source\Operating-Systems\StaticMath\x64\Debug\VectorDLL.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,8 +125,7 @@
       <AdditionalDependencies>NumberLibrary.lib;VectorDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "C:\Users\kraso\source\Operating-Systems\StaticMath\x64\Debug\VectorDLL.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,8 +147,7 @@
       <AdditionalDependencies>NumberLibrary.lib;VectorDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "C:\Users\kraso\source\Operating-Systems\StaticMath\x64\Debug\VectorDLL.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
