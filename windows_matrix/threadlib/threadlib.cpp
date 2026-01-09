@@ -9,7 +9,7 @@
 
 std::mutex resultMutex;
 
-void fillRandom(std::vector<std::vector<int>>& matrix, int minValue = 1, int maxValue = 10) {
+void fillRandom(std::vector<std::vector<int>>& matrix, int minValue = 1, int maxValue = 100) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist(minValue, maxValue);
@@ -44,35 +44,42 @@ void multiplyBlock(const std::vector<std::vector<int>>& matrixA,
     const std::vector<std::vector<int>>& matrixB,
     std::vector<std::vector<int>>& resultMatrix,
     int blockRowA, int blockColA, int blockRowB, int blockColB, int blockSize) {
+
     int size = matrixA.size();
     int startRowA = blockRowA * blockSize;
-    int endRowA = std::min((blockRowA + 1) * blockSize, size);
+    int endRowA = std::min(startRowA + blockSize, size);
     int startColA = blockColA * blockSize;
-    int endColA = std::min((blockColA + 1) * blockSize, size);
+    int endColA = std::min(startColA + blockSize, size);
     int startRowB = blockRowB * blockSize;
-    int endRowB = std::min((blockRowB + 1) * blockSize, size);
+    int endRowB = std::min(startRowB + blockSize, size);
     int startColB = blockColB * blockSize;
-    int endColB = std::min((blockColB + 1) * blockSize, size);
+    int endColB = std::min(startColB + blockSize, size);
 
+    int localRows = endRowA - startRowA;
+    int localCols = endColB - startColB;
+    std::vector<std::vector<int>> localResult(localRows, std::vector<int>(localCols, 0));
+
+    int kEnd = std::min(endColA, endRowB);
     for (int i = startRowA; i < endRowA; ++i) {
         for (int j = startColB; j < endColB; ++j) {
             int sum = 0;
-            for (int t = 0; t < blockSize; ++t) {
-                int colA = startColA + t;
-                int rowB = startRowB + t;
-                if (colA < endColA && rowB < endRowB) {
-                    sum += matrixA[i][colA] * matrixB[rowB][j];
-                }
+            for (int k = startColA; k < kEnd; ++k) {
+                sum += matrixA[i][k] * matrixB[k][j];
             }
-            std::lock_guard<std::mutex> lock(resultMutex);
-            resultMatrix[i][j] += sum;
+            localResult[i - startRowA][j - startColB] = sum;
+        }
+    }
+
+    std::lock_guard<std::mutex> lock(resultMutex);
+    for (int i = 0; i < localRows; ++i) {
+        for (int j = 0; j < localCols; ++j) {
+            resultMatrix[startRowA + i][startColB + j] += localResult[i][j];
         }
     }
 }
 
 int main() {
     const int size = 32;
-    const unsigned maxThreads = 64;
 
     std::vector<std::vector<int>> matrixA(size, std::vector<int>(size));
     std::vector<std::vector<int>> matrixB(size, std::vector<int>(size));
@@ -91,7 +98,7 @@ int main() {
         }
 
         int blocksPerDim = (size + blockSize - 1) / blockSize;
-        std::vector<std::thread> threadPool;
+        std::vector<std::thread> threads;
         size_t threadsCreated = 0;
 
         auto startTime = std::chrono::high_resolution_clock::now();
@@ -99,14 +106,7 @@ int main() {
         for (int blockI = 0; blockI < blocksPerDim; ++blockI) {
             for (int blockJ = 0; blockJ < blocksPerDim; ++blockJ) {
                 for (int blockK = 0; blockK < blocksPerDim; ++blockK) {
-                    while (threadPool.size() >= maxThreads) {
-                        if (threadPool.front().joinable()) {
-                            threadPool.front().join();
-                        }
-                        threadPool.erase(threadPool.begin());
-                    }
-
-                    threadPool.emplace_back(multiplyBlock,
+                    threads.emplace_back(multiplyBlock,
                         std::cref(matrixA), std::cref(matrixB), std::ref(parallelResult),
                         blockI, blockK, blockK, blockJ, blockSize);
                     ++threadsCreated;
@@ -114,7 +114,7 @@ int main() {
             }
         }
 
-        for (auto& thread : threadPool) {
+        for (auto& thread : threads) {
             if (thread.joinable()) {
                 thread.join();
             }
