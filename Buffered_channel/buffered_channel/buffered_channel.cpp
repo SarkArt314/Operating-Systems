@@ -26,15 +26,12 @@ public:
 
     std::pair<T, bool> Recv() {
         std::unique_lock<std::mutex> lock(mutex_);
-        
-        not_empty_.wait(lock, [this]() { 
-            return (closed_ && queue_.empty()) || !queue_.empty(); 
+        not_empty_.wait(lock, [this]() {
+            return (closed_ && queue_.empty()) || !queue_.empty();
             });
-        
         if (queue_.empty() && closed_) {
             return std::make_pair(T(), false);
         }
-        
         T value = std::move(queue_.front());
         queue_.pop();
         not_full_.notify_one();
@@ -67,7 +64,7 @@ struct MatrixBlockTask {
     int blockSize;
 };
 
-void fillRandom(std::vector<std::vector<int>>& matrix, int minValue = 1, int maxValue = 10) {
+void fillRandom(std::vector<std::vector<int>>& matrix, int minValue = 1, int maxValue = 100) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist(minValue, maxValue);
@@ -104,23 +101,20 @@ void processBlockTask(const std::vector<std::vector<int>>& matrixA,
     const MatrixBlockTask& task) {
     int size = matrixA.size();
     int startRowA = task.blockRowA * task.blockSize;
-    int endRowA = std::min((task.blockRowA + 1) * task.blockSize, size);
+    int endRowA = std::min(startRowA + task.blockSize, size);
     int startColA = task.blockColA * task.blockSize;
-    int endColA = std::min((task.blockColA + 1) * task.blockSize, size);
+    int endColA = std::min(startColA + task.blockSize, size);
     int startRowB = task.blockRowB * task.blockSize;
-    int endRowB = std::min((task.blockRowB + 1) * task.blockSize, size);
+    int endRowB = std::min(startRowB + task.blockSize, size);
     int startColB = task.blockColB * task.blockSize;
-    int endColB = std::min((task.blockColB + 1) * task.blockSize, size);
+    int endColB = std::min(startColB + task.blockSize, size);
 
+    int kEnd = std::min(endColA, endRowB);
     for (int i = startRowA; i < endRowA; ++i) {
         for (int j = startColB; j < endColB; ++j) {
             int sum = 0;
-            for (int t = 0; t < task.blockSize; ++t) {
-                int colA = startColA + t;
-                int rowB = startRowB + t;
-                if (colA < endColA && rowB < endRowB) {
-                    sum += matrixA[i][colA] * matrixB[rowB][j];
-                }
+            for (int k = startColA; k < kEnd; ++k) {
+                sum += matrixA[i][k] * matrixB[k][j];
             }
             std::lock_guard<std::mutex> lock(resultMutex);
             resultMatrix[i][j] += sum;
@@ -163,17 +157,16 @@ int main() {
 
         int blocksPerDim = (size + blockSize - 1) / blockSize;
         std::vector<std::thread> threadPool;
-
         BufferedChannel<MatrixBlockTask> taskChannel(blocksPerDim * blocksPerDim * blocksPerDim);
 
-        for (unsigned i = 0; i < maxThreads && i < blocksPerDim * blocksPerDim * blocksPerDim; ++i) {
+        for (unsigned i = 0; i < maxThreads && i < static_cast<unsigned>(blocksPerDim * blocksPerDim * blocksPerDim); ++i) {
             threadPool.emplace_back(taskWorker, std::ref(taskChannel),
                 std::cref(matrixA), std::cref(matrixB), std::ref(parallelResult));
         }
 
         auto startTime = std::chrono::high_resolution_clock::now();
-
         size_t tasksCreated = 0;
+
         for (int blockI = 0; blockI < blocksPerDim; ++blockI) {
             for (int blockJ = 0; blockJ < blocksPerDim; ++blockJ) {
                 for (int blockK = 0; blockK < blocksPerDim; ++blockK) {
